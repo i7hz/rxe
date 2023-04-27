@@ -10,7 +10,7 @@ function rxe.get(identity, file, folder)
     local file = (file and table.insert(collector, file))
     local url = table.concat(collector, '/')
 
-    local req = syn.request or request or http.request;
+    local req = (syn and syn.request) or request or http.request;
 
     success, response = pcall(function()
         return req({Url = url, Method = 'GET'}) or game:HttpGet(url);
