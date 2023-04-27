@@ -29,7 +29,7 @@ function rxe.decrypt(str, key)
     local alphabet = {}
 	local numbers = {}
 
-	local only_chars = str:gsub('%d+', ''):gsub('==', '');
+	local only_chars = str:gsub('%d+', ''):gsub('-', ''):gsub('_', '')
 	if #only_chars > 0 then
 		for I = 1, #only_chars do
 			local c = only_chars:sub(I,I)
@@ -37,11 +37,15 @@ function rxe.decrypt(str, key)
 		end
 	end
 
-	for c in string.gmatch(str, '==%d') do
+	for c in string.gmatch(str, '-%d') do
 		table.insert(numbers, tonumber(c:match('%d')))
 	end
 
-	local only_num = str:gsub('%a+', ''):gsub('==%d', '')
+    for c in string.gmatch(str, '_%d') do
+		table.insert(numbers, tonumber(c:match('%d')))
+	end
+
+	local only_num = str:gsub('%a+', ''):gsub('-%d', ''):gsub('_%d', '')
 	if type(tonumber(only_num)) == 'number' then
 		repeat
 			local Wanted = only_num:match('%d%d');
@@ -70,5 +74,5 @@ function rxe.decrypt(str, key)
     if sums == key then
 		return true;
     end
-	return false;
+    return false
 end
