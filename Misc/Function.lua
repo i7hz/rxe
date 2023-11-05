@@ -1,6 +1,5 @@
 getgenv().rxe = getgenv().rxe or {};
-
-function rxe.get(identity, file, folder)
+function rxe.get(identity: table, file: string, folder: string)
     assert(identity, 'Please provide identity, must follow [name, repository, branch]')
 
     local web = "https://raw.githubusercontent.com"
@@ -10,10 +9,10 @@ function rxe.get(identity, file, folder)
     local file = (file and table.insert(collector, file))
     local url = table.concat(collector, '/')
 
-    local req = (syn and syn.request) or request or http.request;
+    local req = (syn and syn.request) or request or http.request or http_request;
 
     success, response = pcall(function()
-        return req({Url = url, Method = 'GET'}) or game:HttpGet(url);
+        return req({Url = url, Method = 'GET'});
     end)
 
     if success and response then
@@ -23,7 +22,7 @@ function rxe.get(identity, file, folder)
     return warn(response)
 end
 
-function rxe.decrypt(str, key)
+function rxe.decrypt(str: string, key: number)
     assert(key, "Please provide a key")
     
     local alphabet = {}
