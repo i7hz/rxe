@@ -42,10 +42,15 @@ while getgenv().JobFarm do
             repeat task.wait()
                 CoreEvent:FireServer(unpack(firedArguments))
             until CancelJob.Visible and Client.PlayerGui:FindFirstChildWhichIsA("BillboardGui")
-            task.wait(1)
         end
 
-        local Billboard = Client.PlayerGui:FindFirstChild("BillboardGui")
+        task.wait(1)
+
+        local Billboard
+        repeat
+            Billboard = Client.PlayerGui:FindFirstChild("BillboardGui") or Client.PlayerGui:FindFirstChildOfClass("BillboardGui")
+            task.wait()
+        until Billboard
 
         if #Job > 0 and CancelJob.Visible and Billboard.Enabled then
             local TargetPart = Billboard.Adornee
