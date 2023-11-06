@@ -13,7 +13,7 @@ function Tp(coordinate: CFrame, speed: number)
         local PrimaryPart = Character:FindFirstChild("HumanoidRootPart")
 
         local TweenService = game:GetService"TweenService"
-        local TweenInformation = TweenInfo.new(Client:DistanceFromCharacter(coordinate.Position) / TweeningSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        local TweenInformation = TweenInfo.new(Client:DistanceFromCharacter(coordinate.Position) / TweeningSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.In)
         local newTween = TweenService:Create(PrimaryPart, TweenInformation, {CFrame = coordinate})
         newTween:Play()
         wait(Client:DistanceFromCharacter(coordinate.Position) / TweeningSpeed + 0.1)
@@ -38,8 +38,12 @@ local farmSpeed = 12
         local Paycheck = MainGui.LabelJob3.Text
         local CancelJob = MainGui.CancelJob
 
-        local Deliverys = workspace.Delivery;
-        local DeliveryFrom,DeliveryTo
+        if not CancelJob.Visible then
+            repeat task.wait()
+                CoreEvent:FireServer(unpack(firedArguments))
+            until CancelJob.Visible and Client.PlayerGui:FindFirstChildWhichIsA("BillboardGui")
+            task.wait(1)
+        end
 
         local Billboard = Client.PlayerGui:FindFirstChild("BillboardGui")
 
@@ -49,12 +53,14 @@ local farmSpeed = 12
 
             --: Cleaning
             if tostring(TargetPart):match("Entrance") then
-                local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
-                Tp(ModifyCFrame, farmSpeed)
-                local ModifyCFrame = TargetPart.CFrame + Vector3.new(0, -25, 0)
-                Tp(ModifyCFrame, farmSpeed)
-                local ModifyCFrame = TargetPart.CFrame
-                Tp(ModifyCFrame, farmSpeed)
+                if CLient:DistanceFromCharacter(TargetPart.Position) > 40 then
+                    local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
+                    Tp(ModifyCFrame, farmSpeed)
+                    local ModifyCFrame = TargetPart.CFrame + Vector3.new(0, -25, 0)
+                    Tp(ModifyCFrame, farmSpeed)
+                    local ModifyCFrame = TargetPart.CFrame
+                    Tp(ModifyCFrame, farmSpeed)
+                end
 
                 local CleaningParts = workspace:FindFirstChild("CleaningParts")
                 if CleaningParts then
@@ -70,16 +76,20 @@ local farmSpeed = 12
                         return objPart, clickDetect
                     end
 
-                    repeat
-                        local part,cd = getPart()
-                        if part and cd then
-                            Tp(part.CFrame)
-                            PrimaryPart.CFrame = PrimaryPart.CFrame * CFrame.Angles(0, 0, math.rad(180))
+                    local part,cd = getPart()
+                    local finish = false;
+                    Tp(part.CFrame + Vector3.new(0, 3.2, 0), farmSpeed*2)
 
+                    repeat
+                        pcall(function()
+                            PrimaryPart.Anchored = false;
                             fireclickdetector(cd, 1)
-                        end
-                        task.wait()
-                    until not CancelJob.Visible
+
+                            if not part.Parent or not part.Parent == CleaningParts then
+                                finish = true;
+                            end
+                        end)
+                    until finish
                 end
             else -- Delivery
                 local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
@@ -87,11 +97,8 @@ local farmSpeed = 12
                 local ModifyCFrame = TargetPart.CFrame + Vector3.new(0, -25, 0)
                 Tp(ModifyCFrame, farmSpeed)
                 local ModifyCFrame = TargetPart.CFrame
-                Tp(ModifyCFrame, farmSpeed)
+                Tp(ModifyCFrame, farmSpeed*2)
             end
-        else
-            CoreEvent:FireServer(unpack(firedArguments))
-            task.wait()
         end
     end
     task.wait()
