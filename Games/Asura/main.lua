@@ -20,10 +20,10 @@ function Tp(coordinate: CFrame, speed: number)
     end
 end
 
--- getgenv().JobFarm = true;
+getgenv().JobFarm = true;
 local farmSpeed = 12
 
--- while getgenv().JobFarm do
+while getgenv().JobFarm do
     local Client = Players.LocalPlayer;
     local Character = Client.Character or Client.CharacterAdded:Wait();
 
@@ -102,4 +102,4 @@ local farmSpeed = 12
         end
     end
     task.wait()
--- end
+end
