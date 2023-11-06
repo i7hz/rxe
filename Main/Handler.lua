@@ -5,17 +5,13 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/i7hz/rxe/main/Misc/Fu
 repeat task.wait() until game:IsLoaded();
 
 loadstring(rxe.get({name = 'i7hz', repository = 'rxe', branch = 'main'}, 'GameCheck.lua', 'Main'))()
-
-print(rxe.current_game)
 if rxe.current_game then
     local path = 'Games/' .. rxe.current_game.path;
     local script = rxe.get({name = 'i7hz', repository = 'rxe', branch = 'main'}, 'main.lua', path)
     local key = rxe.current_game.key;
     local gameName = rxe.current_game.game_name;
 
-    print(game.Name, gameName)
-
-    if game.Name == gameName then
+    if game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name == gameName then
         local keyCheck = rxe.decrypt(getgenv().key, key)
         if keyCheck then
             local success,msgError = pcall(function()
@@ -24,8 +20,6 @@ if rxe.current_game then
 
             if not success then
                 return error(msgError)
-            else
-                print("Script succeeded!")
             end
         else
             return keyCheck

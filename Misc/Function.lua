@@ -75,3 +75,5 @@ function rxe.decrypt(str: string, key: number)
     end
     return false
 end
+
+getgenv().rxe.current_game = {}

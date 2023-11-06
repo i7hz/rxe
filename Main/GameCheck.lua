@@ -20,4 +20,4 @@ end)()
 assert(ct, 'Sorry current game is not supported');
 
 getgenv().rxe.current_game = ct;
-return print(('Game found! %s'):format(ct['game_name'])) and true;
+return true
