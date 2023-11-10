@@ -85,7 +85,7 @@ function AutoJob(b)
                         local CD = Part and Part:FindFirstChildOfClass("ClickDetector")
                         if Part and CD then
                             local ModifyCFrame = Part.CFrame + Vector3.new(0, 3, 0)
-                            Tp(, Speed)
+                            Tp(ModifyCFrame, Speed)
                             repeat
                                 task.wait(.5)
                                 fireclickdetector(CD, 1)
