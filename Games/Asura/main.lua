@@ -46,16 +46,18 @@ end
 
 function GetCleanParts()
     local Folder = workspace.CleaningParts
-    local PlayerParts = Folder[Client.Name];
-    if #PlayerParts:GetChildren() > 0 then
-        local obj;
-        for i=1, #PlayerParts:GetChildren() do
-            if PlayerParts:FindFirstChild(tostring(i)) then
-                obj = PlayerParts:FindFirstChild(tostring(i))
-                break;
+    if #Folder:GetChildren() > 0 then
+        local PlayerParts = Folder[Client.Name];
+        if PlayerParts and #PlayerParts:GetChildren() > 0 then
+            local obj;
+            for i=1, #PlayerParts:GetChildren() do
+                if PlayerParts:FindFirstChild(tostring(i)) then
+                    obj = PlayerParts:FindFirstChild(tostring(i))
+                    break;
+                end
             end
+            return obj;
         end
-        return obj;
     end
     return false
 end
