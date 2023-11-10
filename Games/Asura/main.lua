@@ -76,7 +76,7 @@ function AutoJob(b)
 
                 if GetLocation() then
                     local oldTm = os.clock()
-                    local Target = GetLocation()
+                    local Target = GetLocation().Adornee
                     local Character = Client.Character or Client.CharacterAdded:Wait()
                     local PrimaryPart = Character:FindFirstChild("HumanoidRootPart")
                     local Speed = Configs.farmSpeed
@@ -94,7 +94,7 @@ function AutoJob(b)
                             OrionLib:MakeNotification({Name = "Auto Job", Content = "Clean Finished, estimated time finish: " .. tostring(curTime) .. "s", Time = 5})
                         end
                     else
-                        if PrimaryPart and GetJob() and Target.Adornee then
+                        if PrimaryPart and GetJob() and Target then
                             local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
                             Tp(ModifyCFrame, Speed)
 
