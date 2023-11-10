@@ -80,7 +80,7 @@ function AutoJob(b)
                     local Speed = Configs.farmSpeed
 
                     if GetCleanParts() and PrimaryPart then
-                        if Client:DistanceFromCharacter(Target.Position) > 70 then
+                        if Client:DistanceFromCharacter(Target.Position) > 100 then
                             local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
                             Tp(ModifyCFrame, Speed)
 
@@ -101,7 +101,7 @@ function AutoJob(b)
                                 fireclickdetector(CD, 1)
                             until Part.Parent == nil or not workspace.CleaningParts[Client.Name]:IsAncestorOf(Part)
                             local curTime = os.clock() - oldTm
-                            OrionLib:MakeNotification({Name = "Auto Job", Content = "Clean Finished, estimated time finish: " .. tostring(curTime) .. "s", Time = 5})
+                            OrionLib:MakeNotification({Name = "Auto Job", Content = ("Clean Finished, estimated time finish: %.2fs"):format(tostring(curTime)), Time = 5})
                         end
                     else
                         if PrimaryPart and GetJob() and Target then
@@ -159,7 +159,6 @@ SectionConfigs:AddSlider({
         Configs.farmSpeed = v;
     end
 })
-
 -- while getgenv().JobFarm do
 --     local Client = Players.LocalPlayer;
 --     local Character = Client.Character or Client.CharacterAdded:Wait();
