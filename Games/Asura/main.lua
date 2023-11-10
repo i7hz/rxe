@@ -50,11 +50,9 @@ function GetCleanParts()
         local PlayerParts = Folder[Client.Name];
         if PlayerParts and #PlayerParts:GetChildren() > 0 then
             local obj;
-            for i=1, #PlayerParts:GetChildren() do
-                if PlayerParts:FindFirstChild(tostring(i)) then
-                    obj = PlayerParts:FindFirstChild(tostring(i))
-                    break;
-                end
+            for _,v in pairs(PlayerParts:GetChildren()) do
+                obj = v;
+                break;
             end
             return obj;
         end
