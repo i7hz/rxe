@@ -144,7 +144,9 @@ local SectionConfigs = Tab1:AddSection({
 SectionFarm:AddToggle({
     Name = "Auto Job",
     Default = false,
-    Callback = AutoJob
+    Callback = function(v)
+        AutoJob(v)
+    end
 })
 
 SectionConfigs:AddSlider({
