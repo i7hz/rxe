@@ -75,23 +75,26 @@ function AutoJob(b)
                 until GetLocation()
 
                 if GetLocation() then
-                    local oldTm = os.time()
+                    local oldTm = os.clock()
                     local Target = GetLocation()
                     local Character = Client.Character or Client.CharacterAdded:Wait()
-                    local PrimaryPart = Character and Character:FindFirstChild("HumanoidRootPart")
+                    local PrimaryPart = Character:FindFirstChild("HumanoidRootPart")
                     local Speed = Configs.farmSpeed
                     if GetCleanParts() and PrimaryPart then
                         local Part = GetCleanParts();
                         local CD = Part and Part:FindFirstChildOfClass("ClickDetector")
                         if Part and CD then
-                            Tp(Part.CFrame + Vector3.new(0, 3, 0), Speed)
+                            local ModifyCFrame = Part.CFrame + Vector3.new(0, 3, 0)
+                            Tp(, Speed)
                             repeat
                                 task.wait(.5)
                                 fireclickdetector(CD, 1)
                             until Part.Parent == nil or not workspace.CleaningParts[Client.Name]:IsAncestorOf(Part)
+                            local curTime = os.clock() - oldTm
+                            OrionLib:MakeNotification({Name = "Auto Job", Content = "Clean Finished, estimated time finish: " .. tostring(curTime) .. "s", Time = 5})
                         end
                     else
-                        if PrimaryPart and GetJob() then
+                        if PrimaryPart and GetJob() and Target.Adornee then
                             local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
                             Tp(ModifyCFrame, Speed)
 
@@ -104,8 +107,6 @@ function AutoJob(b)
                     end
 
                     task.wait(1)
-                    local curTime = os.time() - oldTm
-                    OrionLib:MakeNotification({Name = "Auto Job", Content = "Job Finished, estimated time finish: " .. tostring(curTime), Time = 5})
                     GetJob()
                 end
             --end)
