@@ -2,6 +2,7 @@ repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
 local Client = Players.LocalPlayer
 local PlayerGui = Client.PlayerGui;
@@ -27,7 +28,7 @@ end
 
 function GetJob()
     local Remote = ReplicatedStorage.Events.EventCore;
-    local MainGui = PlayerGui.MainGui
+    local MainGui = PlayerGui:FindFirstChild("Main")
     local jobText, cancelJob = MainGui.LabelJob.Text, MainGui.CancelJob
 
     if not cancelJob.Visible and #jobText <= 1 then
@@ -112,7 +113,7 @@ function AutoJob(b)
     
 end
 
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+OrionLib:MakeNotification({Name = "Loaded", Content = "Thank you for using this services!", Time = 5})
 local Window = OrionLib:MakeWindow({Name = "RXE | " .. rxe.current_game.game_name, HidePremium = false, SaveConfig = true, ConfigFolder = "RXE"})
 local Tab1 = Window:MakeTab({
 	Name = "Farm",
