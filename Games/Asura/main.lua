@@ -78,7 +78,19 @@ function AutoJob(b)
                     local Character = Client.Character or Client.CharacterAdded:Wait()
                     local PrimaryPart = Character:FindFirstChild("HumanoidRootPart")
                     local Speed = Configs.farmSpeed
+
                     if GetCleanParts() and PrimaryPart then
+                        if Client:DistanceFromCharacter(Target.Position) > 40 then
+                            local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
+                            Tp(ModifyCFrame, Speed)
+
+                            local ModifyCFrame = Target.CFrame + Vector3.new(0, -25, 0)
+                            Tp(ModifyCFrame, Speed)
+
+                            local ModifyCFrame = Target.CFrame
+                            Tp(ModifyCFrame, Speed*2)
+                        end
+
                         local Part = GetCleanParts();
                         local CD = Part and Part:FindFirstChildOfClass("ClickDetector")
                         if Part and CD then
@@ -98,7 +110,7 @@ function AutoJob(b)
 
                             local ModifyCFrame = Target.CFrame + Vector3.new(0, -25, 0)
                             Tp(ModifyCFrame, Speed)
-
+                            
                             local ModifyCFrame = Target.CFrame
                             Tp(ModifyCFrame, Speed*2)
                         end
