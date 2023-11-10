@@ -62,7 +62,7 @@ end
 function AutoJob(b)
     while b do
         if b and Client.Character then
-            pcall(function()
+            --pcall(function()
                 repeat
                     task.wait()
                 until GetJob() == true
@@ -105,7 +105,7 @@ function AutoJob(b)
                     OrionLib:MakeNotification({Name = "Auto Job", Content = "Job Finished, estimated time finish: " .. tostring(curTime), Time = 5})
                     GetJob()
                 end
-            end)
+            --end)
         end
         task.wait()
     end
