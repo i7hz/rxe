@@ -13,16 +13,8 @@ local Configs = {
     Noclip = nil
 }
 
-Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
-    for k,v in pairs(workspace:GetDescendants()) do
-        if v:IsA("BasePart") and v.CanCollide == true then
-            v.CanCollide = false;
-        end
-    end    
-end)
-
+local Part = Instance.new("Part")
 do
-    local Part = Instance.new("Part")
     Part.Parent = workspace
     Part.CanCollide = true
     Part.Size = Vector3.new(5, 1, 5)
@@ -33,12 +25,20 @@ do
             if Client.Character or Client.CharacterAdded:Wait() then
                 local PrimaryPart = Client.Character:FindFirstChild("HumanoidRootPart")
                 if PrimaryPart then
-                    Part.CFrame = PrimaryPart.CFrame - Vector3.new(0, 3.2, 0)
+                    Part.CFrame = PrimaryPart.CFrame - Vector3.new(0, 3, 0)
                 end
             end
         end)
     end)
 end
+
+Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
+    for k,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true and v ~= Part then
+            v.CanCollide = false;
+        end
+    end    
+end)
 
 function Tp(coordinate: CFrame, speed: number)
     local Client = Players.LocalPlayer
@@ -303,7 +303,7 @@ SectionConfigs:AddToggle({
         else
             Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
                 for k,v in pairs(workspace:GetDescendants()) do
-                    if v:IsA("BasePart") and v.CanCollide == true then
+                    if v:IsA("BasePart") and v.CanCollide == true and v ~= Part then
                         v.CanCollide = false;
                     end
                 end
