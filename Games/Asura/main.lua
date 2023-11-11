@@ -2,22 +2,24 @@ repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
 
 local Client = Players.LocalPlayer
 local PlayerGui = Client.PlayerGui;
 local Configs = {
     farmSpeed = 12,
-    roadworkFocus = "Stamina"
+    roadworkFocus = "Stamina",
+    Noclip = nil
 }
 
-for k,v in pairs(workspace:GetDescendants()) do
-    if v:IsA("Part") or v:IsA("BasePart") or v:IsA("MeshPart") or v:IsA("WedgePart") or v:IsA("TrussPart") then
-        if v.CanCollide then
+Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
+    for k,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true then
             v.CanCollide = false;
         end
-    end
-end
+    end    
+end)
 
 function Tp(coordinate: CFrame, speed: number)
     local Client = Players.LocalPlayer
@@ -270,6 +272,24 @@ SectionFarm:AddToggle({
     Default = false,
     Callback = function(v)
         AutoRoadwork(v)
+    end
+})
+
+SectionConfigs:AddToggle({
+    Name = "Noclip",
+    Default = true,
+    Callback = function(v)
+        if Configs.Noclip then
+            Configs.Noclip:Disconnect()
+        else
+            Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
+                for k,v in pairs(workspace:GetDescendants()) do
+                    if v:IsA("BasePart") and v.CanCollide == true then
+                        v.CanCollide = false;
+                    end
+                end    
+            end)
+        end
     end
 })
 
