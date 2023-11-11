@@ -33,7 +33,7 @@ do
             if Client.Character or Client.CharacterAdded:Wait() then
                 local PrimaryPart = Client.Character:FindFirstChild("HumanoidRootPart")
                 if PrimaryPart then
-                    Part.CFrame = PrimaryPart.CFrame - Vector3.new(0, 3.6, 0)
+                    Part.CFrame = PrimaryPart.CFrame - Vector3.new(0, 3.2, 0)
                 end
             end
         end)
