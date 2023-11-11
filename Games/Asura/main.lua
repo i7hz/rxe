@@ -19,11 +19,26 @@ Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
             v.CanCollide = false;
         end
     end    
-
-    if Client.Character or Client.CharacterAdded:Wait() and Client.Character:FindFirstAncestorWhichIsA("Humanoid") then
-        Client.Character.Humanoid:ChangeState(11)
-    end
 end)
+
+do
+    local Part = Instance.new("Part")
+    Part.Parent = workspace
+    Part.CanCollide = true
+    Part.Size = Vector3.new(5, 1, 5)
+    Part.Anchored = true;
+
+    task.spawn(function()
+        RunService.Heartbeat:Connect(function()
+            if Client.Character or Client.CharacterAdded:Wait() then
+                local PrimaryPart = Client.Character:FindFirstChild("HumanoidRootPart")
+                if PrimaryPart then
+                    Part.CFrame = PrimaryPart.CFrame - Vector3.new(0, 3.6, 0)
+                end
+            end
+        end)
+    end)
+end
 
 function Tp(coordinate: CFrame, speed: number)
     local Client = Players.LocalPlayer
@@ -291,10 +306,6 @@ SectionConfigs:AddToggle({
                     if v:IsA("BasePart") and v.CanCollide == true then
                         v.CanCollide = false;
                     end
-                end  
-                
-                if Client.Character or Client.CharacterAdded:Wait() and Client.Character:FindFirstAncestorWhichIsA("Humanoid") then
-                    Client.Character.Humanoid:ChangeState(11)
                 end
             end)
         end
