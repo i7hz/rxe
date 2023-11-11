@@ -164,7 +164,7 @@ function AutoRoadwork(b: boolean)
 
             if type(GetInventory("Roadwork Training")) == "table" and GetInventory("Roadwork Training")[1] then
                 local RoadworkGui = PlayerGui.RoadworkGain
-                local Tool, Stack = GetInventory("Roadwork Training")
+                local Tool, Stack = unpack(GetInventory("Roadwork Training"))
 
                 local Stamina = RoadworkGui.Frame.Stamina
                 local _Speed = RoadworkGui.Frame.Speed
