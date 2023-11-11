@@ -173,7 +173,7 @@ function AutoRoadwork(b: boolean)
                     Tool:Activate()
                 end
 
-                if RoadworkGui.Frame.Visible then
+                if not GetLocation() and RoadworkGui.Frame.Visible then
                     if Configs.roadworkFocus == "Stamina" then
                         game:GetService("VirtualUser"):Button1Up(Stamina.AbsolutePosition)
                         Stamina:Activate()
