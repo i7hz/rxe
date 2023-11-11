@@ -162,6 +162,24 @@ function AutoRoadwork(b: boolean)
             local PrimaryPart = Character:FindFirstChild("HumanoidRootPart")
             local Speed = Configs.farmSpeed;
 
+            if GetLocation() then
+                local Target = GetLocation().Adornee
+
+                local oldTm = os.clock()
+                if PrimaryPart and Target then
+                    local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
+                    Tp(ModifyCFrame, Speed)
+
+                    local ModifyCFrame = Target.CFrame + Vector3.new(0, -25, 0)
+                    Tp(ModifyCFrame, Speed)
+
+                    local ModifyCFrame = Target.CFrame
+                    Tp(ModifyCFrame, Speed*2)
+                end
+                local curTime = os.clock() - oldTm
+                OrionLib:MakeNotification({Name = "Roadwork Target", Content = "Reached at " .. Target.Name .. (", estimated time reached: %.2f"):format(curTime)})
+            end
+
             if type(GetInventory("Roadwork Training")) == "table" and GetInventory("Roadwork Training")[1] then
                 local RoadworkGui = PlayerGui.RoadworkGain
                 local Tool, Stack = unpack(GetInventory("Roadwork Training"))
@@ -186,24 +204,6 @@ function AutoRoadwork(b: boolean)
                 repeat
                     task.wait()
                 until GetLocation()
-
-                if GetLocation() then
-                    local Target = GetLocation().Adornee
-
-                    local oldTm = os.clock()
-                    if PrimaryPart and Target then
-                        local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
-                        Tp(ModifyCFrame, Speed)
-
-                        local ModifyCFrame = Target.CFrame + Vector3.new(0, -25, 0)
-                        Tp(ModifyCFrame, Speed)
-
-                        local ModifyCFrame = Target.CFrame
-                        Tp(ModifyCFrame, Speed*2)
-                    end
-                    local curTime = os.clock() - oldTm
-                    OrionLib:MakeNotification({Name = "Roadwork Target", Content = "Reached at " .. Target.Name .. (", estimated time reached: %.2f"):format(curTime)})
-                end
             else
                 local BuyRoadwork = workspace.Purchases.GYM['Roadwork Training']
                 local Part = BuyRoadwork:FindFirstChildWhichIsA("Part")
