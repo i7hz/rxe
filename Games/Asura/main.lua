@@ -19,6 +19,10 @@ Configs.Noclip = RunService.RenderStepped:Connect(function(deltaTime)
             v.CanCollide = false;
         end
     end    
+
+    if Client.Character or Client.CharacterAdded:Wait() and Client.Character:FindFirstAncestorWhichIsA("Humanoid") then
+        Client.Character.Humanoid:ChangeState(11)
+    end
 end)
 
 function Tp(coordinate: CFrame, speed: number)
