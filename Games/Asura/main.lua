@@ -11,6 +11,14 @@ local Configs = {
     roadworkFocus = "Stamina"
 }
 
+for k,v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Part") or v:IsA("BasePart") or v:IsA("MeshPart") or v:IsA("WedgePart") or v:IsA("TrussPart") then
+        if v.CanCollide then
+            v.CanCollide = false;
+        end
+    end
+end
+
 function Tp(coordinate: CFrame, speed: number)
     local Client = Players.LocalPlayer
     local Character = Client.Character or Client.CharacterAdded:Wait()
@@ -224,8 +232,10 @@ function AutoRoadwork(b: boolean)
 
                 if Client:DistanceFromCharacter(Part.Position) <= 5 then
                     repeat task.wait(.5)
+                        local ModifyCFrame = Part.CFrame + Vector3.new(0, 3, 0)
+                        Tp(ModifyCFrame, Speed)
                         fireclickdetector(ClickDetector, 1)
-                    until (type(GetInventory("Roadwork Training")) == "table" and tonumber(GetInventory("Roadwork Training")[2]) >= 3)
+                    until tonumber(GetInventory('Roadwork Training')[2]) == 3
                 end
             end
         end
