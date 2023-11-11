@@ -289,6 +289,9 @@ SectionConfigs:AddToggle({
                     end
                 end    
             end)
+            if Client.Character or Client.CharacterAdded:Wait() and Client.Character:WaitForChild("Humanoid", true) then
+                Client.Character.Humanoid:ChangeState(11)
+            end
         end
     end
 })
