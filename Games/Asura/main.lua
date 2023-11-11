@@ -198,7 +198,7 @@ function AutoRoadwork(b: boolean)
                 local _Speed = RoadworkGui.Frame.Speed
 
                 if not RoadworkGui.Frame.Visible then
-                    Tool:Equipped()
+                    Tool:EquipTool()
                     task.wait()
                     Tool:Activate()
                 end
@@ -287,11 +287,12 @@ SectionConfigs:AddToggle({
                     if v:IsA("BasePart") and v.CanCollide == true then
                         v.CanCollide = false;
                     end
-                end    
+                end  
+                
+                if Client.Character or Client.CharacterAdded:Wait() and Client.Character:FindFirstAncestorWhichIsA("Humanoid") then
+                    Client.Character.Humanoid:ChangeState(11)
+                end
             end)
-            if Client.Character or Client.CharacterAdded:Wait() and Client.Character:WaitForChild("Humanoid", true) then
-                Client.Character.Humanoid:ChangeState(11)
-            end
         end
     end
 })
