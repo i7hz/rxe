@@ -7,7 +7,8 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shl
 local Client = Players.LocalPlayer
 local PlayerGui = Client.PlayerGui;
 local Configs = {
-    farmSpeed = 12
+    farmSpeed = 12,
+    roadworkFocus = "Stamina"
 }
 
 function Tp(coordinate: CFrame, speed: number)
@@ -60,10 +61,39 @@ function GetCleanParts()
     return false
 end
 
-function AutoJob(b)
+function GetInventory(items: string)
+    local Backpack = PlayerGui.BackpackGui.Backpack;
+    local function CheckHotbar()
+        local Hotbar = Backpack.Hotbar:GetChildren()
+        local tool,stack;
+        for _,v in pairs(Hotbar) do
+            if v:IsA("ImageButton") and v.ToolName.Text == items then
+                tool = Client.Backpack:FindFirstChild(v.ToolName.Text);
+                stack = v.StackNumber.Text
+            end
+        end
+        return (tool and stack and {tool, stack}) or nil
+    end
+
+    local function CheckInventory()
+        local Inventory = Backpack.Inventory.ScrollingFrame.UIGridFrame:GetChildren()
+        local tool,stack;
+        for _,v in pairs(Inventory) do
+            if v:IsA("ImageButton") and v.ToolName.Text == items then
+                tool = Client.Backpack:FindFirstChild(v.ToolName.Text)
+                stack = v.StackNumber.Text                
+            end
+        end
+        return (tool and stack and {tool, stack}) or nil
+    end
+
+    return CheckHotbar() or CheckInventory()
+end
+
+function AutoJob(b: boolean)
     while b do
         if b and Client.Character then
-            --pcall(function()
+            pcall(function()
                 repeat
                     task.wait()
                 until GetJob() == true
@@ -119,11 +149,85 @@ function AutoJob(b)
                     task.wait(1)
                     GetJob()
                 end
-            --end)
+            end)
         end
         task.wait()
     end
-    
+end
+
+function AutoRoadwork(b: boolean)
+    while b do
+        if b and Client.Character then
+            local Character = Client.Character or Client.CharacterAdded:Wait()
+            local PrimaryPart = Character:FindFirstChild("HumanoidRootPart")
+            local Speed = Configs.farmSpeed;
+
+            if type(GetInventory("Roadwork Training")) == "table" and GetInventory("Roadwork Training")[1] then
+                local RoadworkGui = PlayerGui.RoadworkGain
+                local Tool, Stack = GetInventory("Roadwork Training")
+
+                local Stamina = RoadworkGui.Frame.Stamina
+                local _Speed = RoadworkGui.Frame.Speed
+
+                if not RoadworkGui.Frame.Visible then
+                    Tool:Activate()
+                end
+
+                if RoadworkGui.Frame.Visible then
+                    if Configs.roadworkFocus == "Stamina" then
+                        game:GetService("VirtualUser"):Button1Up(Stamina.AbsolutePosition)
+                        Stamina:Activate()
+                    elseif Configs.roadworkFocus == "Speed" then
+                        game:GetService("VirtualUser"):Button1Up(_Speed.AbsolutePosition)
+                        _Speed:Activate()
+                    end
+                end
+
+                repeat
+                    task.wait()
+                until GetLocation()
+
+                if GetLocation() then
+                    local Target = GetLocation().Adornee
+
+                    local oldTm = os.clock()
+                    if PrimaryPart and Target then
+                        local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
+                        Tp(ModifyCFrame, Speed)
+
+                        local ModifyCFrame = Target.CFrame + Vector3.new(0, -25, 0)
+                        Tp(ModifyCFrame, Speed)
+
+                        local ModifyCFrame = Target.CFrame
+                        Tp(ModifyCFrame, Speed*2)
+                    end
+                    local curTime = os.clock() - oldTm
+                    OrionLib:MakeNotification({Name = "Roadwork Target", Content = "Reached at " .. Target.Name .. (", estimated time reached: %.2f"):format(curTime)})
+                end
+            else
+                local BuyRoadwork = workspace.Purchases.GYM['Roadwork Training']
+                local Part = BuyRoadwork:FindFirstChildWhichIsA("Part")
+                local ClickDetector = BuyRoadwork:FindFirstChildOfClass("ClickDetector");
+
+                if Client:DistanceFromCharacter(Part.Position) >= 5 then
+                    local ModifyCFrame = PrimaryPart.CFrame + Vector3.new(0, -20, 0)
+                    Tp(ModifyCFrame, Speed)
+
+                    local ModifyCFrame = Part.CFrame + Vector3.new(0, -25, 0)
+                    Tp(ModifyCFrame, Speed)
+
+                    local ModifyCFrame = Part.CFrame + Vector3.new(0, 3, 0)
+                    Tp(ModifyCFrame, Speed)
+                end
+
+                if Client:DistanceFromCharacter(Part.Position) <= 5 then
+                    repeat task.wait(.5)
+                        fireclickdetector(ClickDetector, 1)
+                    until (type(GetInventory("Roadwork Training")) == "table" and tonumber(GetInventory("Roadwork Training")[2]) >= 3)
+                end
+            end
+        end
+    end
 end
 
 OrionLib:MakeNotification({Name = "Loaded", Content = "Thank you for using this services!", Time = 5})
@@ -149,6 +253,14 @@ SectionFarm:AddToggle({
     end
 })
 
+SectionFarm:AddToggle({
+    Name = "Auto Roadwork",
+    Default = false,
+    Callback = function(v)
+        AutoRoadwork(v)
+    end
+})
+
 SectionConfigs:AddSlider({
     Name = "Teleport Speed",
     Min = 1,
@@ -159,6 +271,15 @@ SectionConfigs:AddSlider({
     ValueName = "MoveSpeed",
     Callback = function(v)
         Configs.farmSpeed = v;
+    end
+})
+
+SectionConfigs:AddDropdown({
+    Name = "Roadwork Focus",
+    Default = Configs.roadworkFocus,
+    Options = {"Stamina", "Speed"},
+    Callback = function(v)
+        Configs.roadworkFocus = v;
     end
 })
 -- while getgenv().JobFarm do
