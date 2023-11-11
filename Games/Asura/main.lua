@@ -276,7 +276,7 @@ SectionFarm:AddToggle({
 SectionConfigs:AddSlider({
     Name = "Teleport Speed",
     Min = 1,
-    Max = 12,
+    Max = 20,
     Default = Configs.farmSpeed,
     Color = Color3.fromRGB(140, 0, 255),
     Increment = 1,
