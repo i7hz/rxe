@@ -188,6 +188,8 @@ function AutoRoadwork(b: boolean)
                 local _Speed = RoadworkGui.Frame.Speed
 
                 if not RoadworkGui.Frame.Visible then
+                    Tool:Equipped()
+                    task.wait()
                     Tool:Activate()
                 end
 
